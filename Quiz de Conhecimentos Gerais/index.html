@@ -1,0 +1,190 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Quiz de Conhecimentos Gerais</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            text-align: center;
+            background-color: #f4f4f4;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            height: 100vh;
+        }
+
+        #quiz-container {
+            max-width: 600px;
+            margin: auto;
+            padding: 20px;
+            border: 1px solid #3498db;
+            border-radius: 10px;
+            background-color: #fff;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+
+        h1 {
+            color: #3498db;
+        }
+
+        .question {
+            margin-bottom: 20px;
+            color: #333;
+        }
+
+        .options button {
+            display: block;
+            width: 100%;
+            padding: 10px;
+            margin-bottom: 10px;
+            font-size: 16px;
+            cursor: pointer;
+            background-color: #3498db;
+            color: #fff;
+            border: none;
+            border-radius: 5px;
+            transition: background-color 0.3s;
+        }
+
+        .options button:hover {
+            background-color: #2980b9;
+        }
+
+        #result {
+            margin-top: 20px;
+            font-size: 18px;
+            font-weight: bold;
+            color: #27ae60;
+        }
+
+        #back-button {
+            margin-top: 10px;
+            background-color: #e74c3c;
+            color: #fff;
+            border: none;
+            padding: 10px;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+
+        #back-button:hover {
+            background-color: #c0392b;
+        }
+    </style>
+</head>
+<body>
+
+<div id="quiz-container">
+    <h1>Quiz de Conhecimentos Gerais</h1>
+    <div id="question-container" class="question"></div>
+    <div id="options-container" class="options"></div>
+    <button onclick="checkAnswer()">Enviar</button>
+    <div id="result"></div>
+    <button id="back-button" onclick="goBack()" style="display: none;">Voltar</button>
+</div>
+
+<script>
+    const quizData = [
+        {
+            question: "Qual é a capital do Brasil?",
+            options: ["Rio de Janeiro", "São Paulo", "Brasília", "Belo Horizonte"],
+            correctAnswer: "Brasília"
+        },
+        {
+            question: "Qual é o maior planeta do nosso sistema solar?",
+            options: ["Terra", "Júpiter", "Marte", "Vênus"],
+            correctAnswer: "Júpiter"
+        },
+        {
+            question: "Quem escreveu 'Romeu e Julieta'?",
+            options: ["Charles Dickens", "William Shakespeare", "Jane Austen", "Mark Twain"],
+            correctAnswer: "William Shakespeare"
+        },
+        {
+            question: "Quantos continentes existem?",
+            options: ["4", "6", "7", "5"],
+            correctAnswer: "7"
+        },
+        {
+            question: "Quem pintou a Mona Lisa?",
+            options: ["Vincent van Gogh", "Pablo Picasso", "Leonardo da Vinci", "Michelangelo"],
+            correctAnswer: "Leonardo da Vinci"
+        },
+        {
+            question: "Qual é o maior oceano do mundo?",
+            options: ["Oceano Atlântico", "Oceano Pacífico", "Oceano Índico", "Oceano Ártico"],
+            correctAnswer: "Oceano Pacífico"
+        }
+    ];
+
+    let currentQuestion = 0;
+    let score = 0;
+
+    function loadQuestion() {
+        const questionContainer = document.getElementById("question-container");
+        const optionsContainer = document.getElementById("options-container");
+
+        questionContainer.textContent = quizData[currentQuestion].question;
+        optionsContainer.innerHTML = "";
+
+        quizData[currentQuestion].options.forEach((option, index) => {
+            const button = document.createElement("button");
+            button.textContent = option;
+            button.onclick = () => selectAnswer(index);
+            optionsContainer.appendChild(button);
+        });
+    }
+
+    function selectAnswer(index) {
+        const selectedAnswer = quizData[currentQuestion].options[index];
+        const correctAnswer = quizData[currentQuestion].correctAnswer;
+
+        if (selectedAnswer === correctAnswer) {
+            score++;
+        }
+
+        currentQuestion++;
+
+        if (currentQuestion < quizData.length) {
+            loadQuestion();
+            document.getElementById("back-button").style.display = "inline"; // Mostrar o botão "Voltar"
+        } else {
+            showResult();
+        }
+    }
+
+    function showResult() {
+        const resultContainer = document.getElementById("result");
+        const backButton = document.getElementById("back-button");
+        resultContainer.textContent = `Você acertou ${score} de ${quizData.length} perguntas.`;
+        backButton.style.display = "none"; // Ocultar o botão "Voltar" após o quiz ser concluído
+    }
+
+    function checkAnswer() {
+        const selectedOption = document.querySelector("button:focus");
+        if (selectedOption) {
+            const index = Array.from(selectedOption.parentNode.children).indexOf(selectedOption);
+            selectAnswer(index);
+        }
+    }
+
+    function goBack() {
+        if (currentQuestion > 0) {
+            currentQuestion--;
+            loadQuestion();
+        }
+        if (currentQuestion === 0) {
+            document.getElementById("back-button").style.display = "none"; // Ocultar o botão "Voltar" se estiver na primeira pergunta
+        }
+    }
+
+    loadQuestion();
+</script>
+
+</body>
+</html>
